@@ -75,5 +75,15 @@ int main(){
     
     map.show_map();
     sleep(3);
+
+    //snakebody
+    map.convert<Box>(10,40);
+    map.convert<SnakeBody>(10,41);
+    map.convert<SnakeBody>(10,42);
+    map.convert<SnakeBody>(10,43);
+    map.convert<SnakeBody>(10,44);
+
+    map.show_map();
+    sleep(3);
     endwin();
 }
