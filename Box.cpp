@@ -14,11 +14,15 @@ class Box{
         Box(int x, int y, int sizex=2, int sizey=1, int gabx=2, int gaby=1){
             local_win = newwin(sizey, sizex, y*gaby, x*gabx);
         }
+
         Box(Box* box):local_win(box->local_win){
             delete box;
         }
 
-        virtual void encounter(Snake& s){}
+        virtual int encounter(Snake& s){
+            return 0;
+        }
+
         virtual void show(){
             wbkgd(local_win, COLOR_PAIR(1));
             wrefresh(local_win);	
@@ -32,11 +36,12 @@ class Box{
 class Item1:public Box{
     public:
         Item1(Box* box):Box(box){};
-        void encounter(Snake& s){
+        int encounter(Snake& s){
             s.length++;
+            return 1;
         }
         
-        virtual void show(){
+        void show(){
             wbkgd(local_win, COLOR_PAIR(5));
             wrefresh(local_win);
         }
@@ -45,8 +50,9 @@ class Item1:public Box{
 class Item2:public Box{
     public:
         Item2(Box* box):Box(box){};
-        void encounter(Snake& s){
+        int encounter(Snake& s){
             s.length--;
+            return -1;
         }
 
         void show(){
@@ -58,8 +64,9 @@ class Item2:public Box{
 class SnakeBody:public Box{
     public:
         SnakeBody(Box* box):Box(box){};
-        void encounter(Snake& s){
+        int encounter(Snake& s){
             //ScoreBoard::lose();
+            return 0;
         }
 
         void show(){
@@ -71,12 +78,27 @@ class SnakeBody:public Box{
 class Wall:public Box{
     public:
         Wall(Box* box):Box(box){};
-        void encounter(Snake& s){
+        int encounter(Snake& s){
+            return 0;
             //ScoreBoard::lose();
         }
 
         void show(){
             wbkgd(local_win, COLOR_PAIR(2));
+            wrefresh(local_win);
+        }
+};
+
+class Portal:public Box{
+    public:
+        Portal(Box* box):Box(box){};
+        int encounter(Snake& s){
+            return 0;
+            //ScoreBoard::lose();
+        }
+
+        void show(){
+            wbkgd(local_win, COLOR_PAIR(6));
             wrefresh(local_win);
         }
 };
