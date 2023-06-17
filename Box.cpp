@@ -1,9 +1,4 @@
-//#include <iostream>
 #include <ncurses.h>
-#include<unistd.h>
-#include <array>
-
-using namespace std;
 
 class Snake{
     public:
@@ -13,113 +8,75 @@ class Snake{
 
 class Box{
     protected:
-        int sizex, sizey, gabx, gaby;
         WINDOW *local_win;
         
     public:
-        Box(int sizex=5, int sizey=3, int gabx=5, int gaby=3):sizex(sizex), sizey(sizey), gabx(gabx), gaby(gaby){}
-        virtual void encounter(Snake& s){}
-        virtual WINDOW* show(int y, int x){
+        Box(int x, int y, int sizex=2, int sizey=1, int gabx=2, int gaby=1){
             local_win = newwin(sizey, sizex, y*gaby, x*gabx);
-            box(local_win, 0 ,0);
-            wrefresh(local_win);	
-            return local_win;
         }
-        virtual ~Box(){
+        Box(Box* box):local_win(box->local_win){
+            delete box;
+        }
+
+        virtual void encounter(Snake& s){}
+        virtual void show(){
+            wbkgd(local_win, COLOR_PAIR(1));
+            wrefresh(local_win);	
+        }
+
+        void delete_window(){
             delwin(local_win);
         }
 };
 
 class Item1:public Box{
     public:
+        Item1(Box* box):Box(box){};
         void encounter(Snake& s){
             s.length++;
         }
         
-        virtual WINDOW* show(int y, int x){
-            local_win = newwin(sizey, sizex, y*gaby, x*gabx);
-            box(local_win, 0 , 0);
-            wattron(local_win, COLOR_PAIR(1));
-            wmove(local_win, 1,2);
-            wprintw(local_win, "*");
-            wrefresh(local_win);	
-            return local_win;
+        virtual void show(){
+            wbkgd(local_win, COLOR_PAIR(5));
+            wrefresh(local_win);
         }
 };
 
 class Item2:public Box{
     public:
+        Item2(Box* box):Box(box){};
         void encounter(Snake& s){
             s.length--;
         }
 
-        WINDOW* show(int y, int x){
-            
-            local_win = newwin(sizex, sizey, y, x);
-            box(local_win, 0 , 0);
-            wrefresh(local_win);	
-            return local_win;
+        void show(){
+            wbkgd(local_win, COLOR_PAIR(4));
+            wrefresh(local_win);
         }
 };
 
 class SnakeBody:public Box{
     public:
+        SnakeBody(Box* box):Box(box){};
         void encounter(Snake& s){
             //ScoreBoard::lose();
         }
 
-        WINDOW* show(int y, int x){
-            
-            local_win = newwin(sizex, sizey, y, x);
-            box(local_win, 0 , 0);
-            wrefresh(local_win);	
-            return local_win;
+        void show(){
+            wbkgd(local_win, COLOR_PAIR(3));
+            wrefresh(local_win);
         }
 };
 
 class Wall:public Box{
     public:
+        Wall(Box* box):Box(box){};
         void encounter(Snake& s){
             //ScoreBoard::lose();
         }
 
-        WINDOW* show(int y, int x){
-            
-            local_win = newwin(sizex, sizey , y, x);
-            box(local_win, 0 , 0);
-            wrefresh(local_win);	
-            
-            return local_win;
+        void show(){
+            wbkgd(local_win, COLOR_PAIR(2));
+            wrefresh(local_win);
         }
 };
-
-#define HEIGHT 10
-#define WIDTH 30
-
-int main(){
-    initscr();
-    start_color();
-    cbreak();
-    init_pair(1, COLOR_RED, COLOR_BLACK);
-    
-    printw("Some text");
- 
-    //init_pair(3, COLOR_CYAN, COLOR_BLACK);   
-    Box* map[HEIGHT][WIDTH];
-    for (int i = 0; i < HEIGHT; i++) {
-        for (int j = 0; j < WIDTH; j++) {
-            map[i][j] = new Box();
-        }
-    }
-
-
-    map[3][2] = new Item1();
-
-    for(int i=0;i<HEIGHT;i++){
-        for(int j=0;j<WIDTH;j++){
-            map[i][j]->show(i, j);
-        }
-    }
-    sleep(3);
-    endwin();
-}  
