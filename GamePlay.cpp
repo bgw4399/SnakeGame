@@ -131,10 +131,11 @@ class GamePlay{
 };
 
 static void game_result(bool win){
-    WINDOW* result = newwin(HEIGHT, WIDTH, 0, 0);
-    wmove(result, HEIGHT/2-6, WIDTH/2-6);
+    WINDOW* result = newwin(HEIGHT, WIDTH*2, 0, 0);
+    wmove(result, HEIGHT/2-3, WIDTH-6);
     if(win) wprintw(result, "Game WIN\n");
     else wprintw(result, "Game OVER\n");
+    wrefresh(result);
     sleep(1.5);
     delwin(result);
 }
