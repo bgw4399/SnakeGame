@@ -10,6 +10,7 @@ class GameMap{
         Box* gmap[HEIGHT][WIDTH];
         deque<pair<int, int>> body_history;
         deque<pair<int, int>> item_history;
+        deque<pair<int, int>> portal_history;
 
     public:
         GameMap(){
@@ -37,7 +38,7 @@ class GameMap{
 
         template <typename T>
         void convert(int x, int y){
-            if(!(x>=HEIGHT || x<0 || y>=WIDTH || y<0) && gmap[x][y]->is_convertable())
+            if(!(x>=HEIGHT || x<0 || y>=WIDTH || y<0))
                 gmap[x][y] = new T((Box *)gmap[x][y]);
         }
 
@@ -58,15 +59,15 @@ class GameMap{
 
         void map_encounter(int x, int y, Snake &s){
             gmap[x][y]->encounter(s);
-            convert<SnakeBody>(x, y);
+            if(gmap[x][y]->is_convertable()) convert<SnakeBody>(x, y);
             body_history.push_back(make_pair(x, y));
             while(body_history.size() > s.length){
                 auto item = body_history.front();
-                convert<Box>(item.first,item.second);
+                if(gmap[item.first][item.second] -> is_convertable()) convert<Box>(item.first,item.second);
+                else convert<Wall>(item.first,item.second);
                 body_history.pop_front();
             } 
         }
-
 
         template <typename T>
         void item_insert(int x, int y){
@@ -76,6 +77,19 @@ class GameMap{
                 auto item = item_history.front();
                 convert<Box>(item.first, item.second);
                 item_history.pop_front();
+            }
+        }
+
+        void portal_insert(int x, int y, int ox, int oy){
+            convert_to_portal(x, y, ox, oy);
+            convert_to_portal(ox, oy, x, y);
+            portal_history.push_back(make_pair(x, y));
+            portal_history.push_back(make_pair(ox, oy));
+
+            if(portal_history.size()>=3){
+                auto item = portal_history.front();
+                convert<Wall>(item.first, item.second);
+                portal_history.pop_front();
             }
         }
 

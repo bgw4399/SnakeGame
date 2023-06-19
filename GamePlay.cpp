@@ -96,7 +96,7 @@ class GamePlay{
 
         void get_random_item_box(){
             int pos_x = generator()%HEIGHT, pos_y = generator()%WIDTH;
-            if(gmap.is_empty(pos_x, pos_y)){
+            if(gmap.is_empty(pos_x, pos_y)){ // Box인지
                 if(generator()%2) gmap.item_insert<Item1>(pos_x, pos_y);
                 else gmap.item_insert<Item2>(pos_x, pos_y);
             }
@@ -108,8 +108,7 @@ class GamePlay{
         void get_portal_box(){
             int pos_x = generator()%HEIGHT, pos_y = generator()%WIDTH, pos_ox = generator()%HEIGHT, pos_oy = generator()%WIDTH;
             if(gmap.is_wall(pos_x, pos_y) && gmap.is_wall(pos_ox, pos_oy) &&!((pos_x==pos_ox)&&(pos_y==pos_oy))){
-                gmap.convert_to_portal(pos_x, pos_y, pos_ox, pos_oy); // Gate 출현 방법 미구현
-                gmap.convert_to_portal(pos_ox, pos_oy, pos_x, pos_y);
+                gmap.portal_insert(pos_x, pos_y, pos_ox, pos_oy);
             }
             else{
                 get_portal_box();
