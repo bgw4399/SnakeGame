@@ -36,7 +36,7 @@ class GamePlay{
             }
         }
 
-        void play(){
+        bool play(){
             int temp;
             ScoreBoard::start();
             while(1){
@@ -45,7 +45,9 @@ class GamePlay{
                 sleep(s.tick);
                 move();
                 get_random_item();
-                if(ScoreBoard::game_over) return;
+
+                if(win_status_check()) return true;
+                if(ScoreBoard::game_over) return false;
             }
         }
 
@@ -62,6 +64,11 @@ class GamePlay{
                 gmap.convert<Wall>(x, y);
                 return true;
             }
+        }
+
+        bool win_status_check(){
+            if((s.length==10) && (s.pos_item_cnt>=5) && (s.neg_item_cnt>=5) && (s.portal_enc_cnt>=1)) return true;
+            return false;
         }
 
         void move(){
@@ -90,7 +97,7 @@ class GamePlay{
             }
 
             if(s.length>=10){
-                if(timer%300==0) get_portal_box();
+                if(timer%30==0) get_portal_box();
             }
         }
 
@@ -105,9 +112,16 @@ class GamePlay{
             }
         }
 
+        bool is_at_point(int x, int y){
+            if(x==0&&(y==0||y==WIDTH-1)) return true;
+            if(x==HEIGHT-1&&(y==0||y==WIDTH-1)) return true;
+            return false;
+        }
+
         void get_portal_box(){
             int pos_x = generator()%HEIGHT, pos_y = generator()%WIDTH, pos_ox = generator()%HEIGHT, pos_oy = generator()%WIDTH;
-            if(gmap.is_wall(pos_x, pos_y) && gmap.is_wall(pos_ox, pos_oy) &&!((pos_x==pos_ox)&&(pos_y==pos_oy))){
+            if(gmap.is_wall(pos_x, pos_y) && gmap.is_wall(pos_ox, pos_oy) && !((pos_x==pos_ox)&&(pos_y==pos_oy)) 
+                && !(is_at_point(pos_x, pos_y)||is_at_point(pos_ox, pos_oy))){
                 gmap.portal_insert(pos_x, pos_y, pos_ox, pos_oy);
             }
             else{
@@ -116,6 +130,15 @@ class GamePlay{
         }
 };
 
+static void game_result(bool win){
+    WINDOW* result = newwin(HEIGHT, WIDTH, 0, 0);
+    wmove(result, HEIGHT/2-6, WIDTH/2-6);
+    if(win) wprintw(result, "Game WIN\n");
+    else wprintw(result, "Game OVER\n");
+    sleep(1.5);
+    delwin(result);
+}
+
 int ScoreBoard::game_over = 0;
 int main(){
     initscr();
@@ -123,10 +146,10 @@ int main(){
     noecho();
     curs_set(FALSE);
     nodelay(stdscr, TRUE);
-    GamePlay(1).play();
-    GamePlay(2).play();
-    GamePlay(3).play();
-    GamePlay(4).play();
-    GamePlay(5).play();
+    game_result(GamePlay(1).play());
+    game_result(GamePlay(2).play());
+    game_result(GamePlay(3).play());
+    game_result(GamePlay(4).play());
+    game_result(GamePlay(5).play());
     endwin();
 }

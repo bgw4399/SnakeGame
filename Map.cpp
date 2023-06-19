@@ -64,7 +64,10 @@ class GameMap{
             while(body_history.size() > s.length){
                 auto item = body_history.front();
                 if(gmap[item.first][item.second] -> is_convertable()) convert<Box>(item.first,item.second);
-                else convert<Wall>(item.first,item.second);
+                else{
+                    convert<Wall>(gmap[item.first][item.second]->opposite_x, gmap[item.first][item.second]->opposite_y);
+                    convert<Wall>(item.first,item.second); // Portal의 경우
+                }
                 body_history.pop_front();
             } 
         }
@@ -86,10 +89,10 @@ class GameMap{
             portal_history.push_back(make_pair(x, y));
             portal_history.push_back(make_pair(ox, oy));
 
-            if(portal_history.size()>=3){
+            while(portal_history.size()>=3){
                 auto item = portal_history.front();
-                convert<Wall>(item.first, item.second);
                 portal_history.pop_front();
+                convert<Wall>(item.first, item.second);
             }
         }
 

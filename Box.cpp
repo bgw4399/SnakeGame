@@ -8,6 +8,7 @@ class Box{
     protected:
         WINDOW *local_win;
     public:
+        int opposite_x, opposite_y;
         Box(int x, int y, int sizex=2, int sizey=1, int gabx=2, int gaby=1){
             local_win = newwin(sizey, sizex, y*gaby, x*gabx);
         }
@@ -137,9 +138,10 @@ class Wall:public Box{
 
 class Portal:public Box{
     public:
-        int opposite_x, opposite_y;
         bool empty_direction[4];
-        Portal(Box* box, int ox, int oy, bool w_em, bool d_em, bool s_em, bool a_em):Box(box), opposite_x(ox), opposite_y(oy){
+        Portal(Box* box, int ox, int oy, bool w_em, bool d_em, bool s_em, bool a_em):Box(box){
+            opposite_x = ox;
+            opposite_y = oy;
             empty_direction[0] = w_em; // 상대 출구 기준, w, d, s, a 방향으로 나올수 있는지
             empty_direction[1] = d_em;
             empty_direction[2] = s_em;

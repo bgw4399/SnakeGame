@@ -12,10 +12,10 @@ class ScoreBoard{
             werase(local_win);
             wprintw(local_win, "Score Board\n");
             wprintw(local_win, "--------------\n");
-            wprintw(local_win, "B: %d / 10 %s\n", s.length, (s.length==10)?"Done":"Doing");
-            wprintw(local_win, "+: %d %s\n", s.pos_item_cnt, (s.pos_item_cnt>=5)?"Done":"Doing");
-            wprintw(local_win, "-: %d %s\n", s.neg_item_cnt, (s.neg_item_cnt>=5)?"Done":"Doing");
-            wprintw(local_win, "G: %d %s\n", s.portal_enc_cnt, (s.portal_enc_cnt>=1)?"Done":"Doing");
+            wprintw(local_win, "B: %d / 10 (%s)\n", s.length, (s.length==10)?"v":" ");
+            wprintw(local_win, "+: %d (%s)\n", s.pos_item_cnt, (s.pos_item_cnt>=5)?"v":" ");
+            wprintw(local_win, "-: %d (%s)\n", s.neg_item_cnt, (s.neg_item_cnt>=5)?"v":" ");
+            wprintw(local_win, "G: %d (%s)\n", s.portal_enc_cnt, (s.portal_enc_cnt>=1)?"v":" ");
             wrefresh(local_win);	
         }
 
