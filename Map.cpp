@@ -51,6 +51,11 @@ class GameMap{
             return gmap[x][y]->is_empty();
         }
 
+        bool is_wall(int x, int y){ //empty false, convertable false -> wall
+            if(x>=HEIGHT || x<0 || y>=WIDTH || y<0) return false;
+            return !gmap[x][y]->is_empty() && !gmap[x][y]->is_convertable();
+        }
+
         void map_encounter(int x, int y, Snake &s){
             gmap[x][y]->encounter(s);
             convert<SnakeBody>(x, y);
