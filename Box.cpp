@@ -7,9 +7,8 @@
 class Box{
     protected:
         WINDOW *local_win;
-        int x, y;
     public:
-        Box(int x, int y, int sizex=2, int sizey=1, int gabx=2, int gaby=1):x(x), y(y){
+        Box(int x, int y, int sizex=2, int sizey=1, int gabx=2, int gaby=1){
             local_win = newwin(sizey, sizex, y*gaby, x*gabx);
         }
 
@@ -139,20 +138,54 @@ class Wall:public Box{
 class Portal:public Box{
     public:
         int opposite_x, opposite_y;
-        Portal(Box* box, int ox, int oy):Box(box), opposite_x(ox), opposite_y(oy){
-            ;
+        bool empty_direction[4];
+        Portal(Box* box, int ox, int oy, bool w_em, bool d_em, bool s_em, bool a_em):Box(box), opposite_x(ox), opposite_y(oy){
+            empty_direction[0] = w_em; // 상대 출구 기준, w, d, s, a 방향으로 나올수 있는지
+            empty_direction[1] = d_em;
+            empty_direction[2] = s_em;
+            empty_direction[3] = a_em;
         };
         void encounter(Snake& s){
             s.portal_enc_cnt++;
             s.pos_x = opposite_x;
             s.pos_y = opposite_y;
-            
-            if(x==0) s.direction = 's';
-            else if(x==HEIGHT-1) s.direction = 'w';
-            else if(y==0) s.direction = 'd';
-            else if(y==WIDTH-1) s.direction = 'a';
+            s.direction = calculate_direction(s.pos_x, s.pos_y, s.direction);
+        }
+
+        int calculate_direction(int x, int y, int cur_dir){
+            if(x==0) return 's';
+            else if(x==HEIGHT-1) return 'w';
+            else if(y==0) return 'd';
+            else if(y==WIDTH-1) return 'a';
             else{
-                // portal이 맵 중간에 있을 때 미구현
+                switch(cur_dir){
+                    case 'w':
+                    if(empty_direction[0]) return 'w'; 
+                    else if(empty_direction[1]) return 'd';
+                    else if(empty_direction[3]) return 'a';
+                    else if(empty_direction[2]) return 's';
+                    else return -1;
+                    case 'd':
+                    if(empty_direction[1]) return 'd' ;
+                    else if(empty_direction[2]) return 's';
+                    else if(empty_direction[0]) return 'w'; 
+                    else if(empty_direction[3]) return 'a';
+                    else return -1;
+                    case 's':
+                    if(empty_direction[2]) return 's';
+                    else if(empty_direction[3]) return 'a';
+                    else if(empty_direction[1]) return 'd';
+                    else if(empty_direction[0]) return 'w'; 
+                    else return -1;
+                    case 'a':
+                    if(empty_direction[3]) return 'a';
+                    else if(empty_direction[0]) return 'w'; 
+                    else if(empty_direction[2]) return 's';
+                    else if(empty_direction[1]) return 'd' ;
+                    else return -1;
+                    default:
+                    return -1;
+                }   
             }
         }
 

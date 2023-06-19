@@ -42,11 +42,12 @@ class GameMap{
         }
 
         void convert_to_portal(int x, int y, int ox, int oy){
-            if(!(x>=HEIGHT || x<0 || y>=WIDTH || y<0))
-                gmap[x][y] = new Portal((Box *)gmap[x][y], ox, oy);
+            gmap[x][y] = new Portal((Box *)gmap[x][y], ox, oy, is_empty(ox-1, oy), is_empty(ox, oy+1), is_empty(ox-1, oy), is_empty(ox, oy-1));
+            gmap[ox][oy] = new Portal((Box *)gmap[ox][oy], x, y, is_empty(x-1, y), is_empty(x, y+1), is_empty(x-1, y), is_empty(x, y-1));
         }
 
         bool is_empty(int x, int y){
+            if(x>=HEIGHT || x<0 || y>=WIDTH || y<0) return false;
             return gmap[x][y]->is_empty();
         }
 
