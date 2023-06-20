@@ -23,6 +23,7 @@ class GameMap{
             init_pair(6, COLOR_MAGENTA, COLOR_MAGENTA);
             init_pair(7, COLOR_RED, COLOR_BLUE);
             init_pair(8, COLOR_BLUE, COLOR_RED);
+            init_pair(9, COLOR_YELLOW, COLOR_YELLOW);
             for (int i = 0; i < HEIGHT; i++) {
                 for (int j = 0; j < WIDTH; j++) {
                     gmap[i][j] = new Box(j, i);
@@ -56,16 +57,16 @@ class GameMap{
 
         bool is_wall(int x, int y){ //empty false, convertable false -> wall
             if(x>=HEIGHT || x<0 || y>=WIDTH || y<0) return false;
-            return !gmap[x][y]->is_empty() && !gmap[x][y]->is_convertable();
+            return gmap[x][y]->is_convertable(false); // portal로 convertable한지
         }
 
         void map_encounter(int x, int y, Snake &s){
             gmap[x][y]->encounter(s);
-            if(gmap[x][y]->is_convertable()) convert<SnakeBody>(x, y);
+            if(gmap[x][y]->is_convertable(true)) convert<SnakeBody>(x, y); // SnakeBody로 convertable한지
             body_history.push_back(make_pair(x, y));
             while(body_history.size() > s.length){
                 auto item = body_history.front();
-                if(gmap[item.first][item.second] -> is_convertable()) convert<Box>(item.first,item.second);
+                if(gmap[item.first][item.second] -> is_convertable(true)) convert<Box>(item.first,item.second);
                 else{
                     convert<Wall>(gmap[item.first][item.second]->opposite_x, gmap[item.first][item.second]->opposite_y);
                     convert<Wall>(item.first,item.second); // Portal의 경우

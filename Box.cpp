@@ -34,8 +34,9 @@ class Box{
             return true;
         }
 
-        virtual bool is_convertable(){
-            return true;
+        virtual bool is_convertable(bool to_snake){
+            if(to_snake) return true; //snake로 변환가능한지
+            else return false; // portal로 변환가능한지
         }
 };
 
@@ -58,8 +59,9 @@ class Item1:public Box{
             return false;
         }
 
-        bool is_convertable(){
-            return true;
+        bool is_convertable(bool to_snake){
+            if(to_snake) return true;
+            else return false;
         }
 };
 
@@ -85,8 +87,9 @@ class Item2:public Box{
             return false;
         }
 
-        bool is_convertable(){
-            return true;
+        bool is_convertable(bool to_snake){
+            if(to_snake) return true;
+            else return false;
         }
 };
 
@@ -110,8 +113,9 @@ class Item3:public Box{
             return false;
         }
 
-        bool is_convertable(){
-            return true;
+        bool is_convertable(bool to_snake){
+            if(to_snake) return true;
+            else return false;
         }
 };
 
@@ -135,8 +139,9 @@ class Item4:public Box{
             return false;
         }
 
-        bool is_convertable(){
-            return true;
+        bool is_convertable(bool to_snake){
+            if(to_snake) return true;
+            else return false;
         }
 };
 
@@ -158,8 +163,9 @@ class SnakeBody:public Box{
             return false;
         }
 
-        bool is_convertable(){
-            return true;
+        bool is_convertable(bool to_snake){
+            if(to_snake) return true;
+            else return false;
         }
 };
 
@@ -181,8 +187,33 @@ class Wall:public Box{
             return false;
         }
 
-        bool is_convertable(){
+        bool is_convertable(bool to_snake){
+            if(to_snake) return false;
+            else return true;
+        }
+};
+
+class ImmuneWall:public Box{
+    public:
+        ImmuneWall(Box* box):Box(box){
+            ;
+        };
+        void encounter(Snake& s){
+            ScoreBoard::lose();
+        }
+
+        void show(){
+            wbkgd(local_win, COLOR_PAIR(9));
+            wrefresh(local_win);
+        }
+
+        bool is_empty(){
             return false;
+        }
+
+        bool is_convertable(bool to_snake){
+            if(to_snake) return false;
+            else return false;
         }
 };
 
@@ -250,7 +281,8 @@ class Portal:public Box{
             return false;
         }
 
-        bool is_convertable(){
-            return false;
+        bool is_convertable(bool to_snake){
+            if(to_snake) return false;
+            else return false;
         }
 };

@@ -12,12 +12,7 @@ class GamePlay{
     ScoreBoard score;
     int timer, temp, level;
     public:
-        GamePlay(int level):s(6), score(30, 7, WIDTH+3, 5), generator(rd()), level(level){
-            // for (int i = 0; i < HEIGHT; i++) {
-            //     for (int j = 0; j < WIDTH; j++) {
-            //         if(i==0 || j==0 || i==HEIGHT-1 || j==WIDTH-1) gmap.convert<Wall>(i,j);
-            //     }
-            // }
+        GamePlay(int level):s(8), score(30, 7, WIDTH+3, 5), generator(rd()), level(level){
             generate_random_map();
             timer = 0;            
         }
@@ -25,7 +20,8 @@ class GamePlay{
         void generate_random_map(){
             for (int i = 0; i < HEIGHT; i++) {
                 for (int j = 0; j < WIDTH; j++) {
-                    if(i==0 || j==0 || i==HEIGHT-1 || j==WIDTH-1) gmap.convert<Wall>(i,j);
+                    if(is_at_point(i, j)) gmap.convert<ImmuneWall>(i,j);
+                    else if(i==0 || j==0 || i==HEIGHT-1 || j==WIDTH-1) gmap.convert<Wall>(i,j);
                     else gmap.convert<Box>(i,j);
                 }
             }
@@ -142,8 +138,7 @@ class GamePlay{
 
         void get_portal_box(){
             int pos_x = generator()%HEIGHT, pos_y = generator()%WIDTH, pos_ox = generator()%HEIGHT, pos_oy = generator()%WIDTH;
-            if(gmap.is_wall(pos_x, pos_y) && gmap.is_wall(pos_ox, pos_oy) && !((pos_x==pos_ox)&&(pos_y==pos_oy)) 
-                && !(is_at_point(pos_x, pos_y)||is_at_point(pos_ox, pos_oy))){
+            if(gmap.is_wall(pos_x, pos_y) && gmap.is_wall(pos_ox, pos_oy) && !((pos_x==pos_ox)&&(pos_y==pos_oy))){
                 gmap.portal_insert(pos_x, pos_y, pos_ox, pos_oy);
             }
             else{
