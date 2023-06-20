@@ -10,11 +10,12 @@ class GamePlay{
     GameMap gmap;
     Snake s;
     ScoreBoard score;
-    int timer, temp, level;
+    int timer, temp, level, portal_cnt;
     public:
-        GamePlay(int level):s(8), score(30, 7, WIDTH+3, 5), generator(rd()), level(level){
+        GamePlay(int level):s(10), score(30, 7, WIDTH+3, 5), generator(rd()), level(level){
             generate_random_map();
-            timer = 0;            
+            timer = 0;     
+            portal_cnt = 0; // s가 조건 만족 후 60 frame 후에 첫 등장;
         }
 
         void generate_random_map(){
@@ -103,7 +104,8 @@ class GamePlay{
             }
 
             if(s.length>=10){
-                if(timer%100==0) get_portal_box();
+                portal_cnt++;
+                if(portal_cnt%60==0) get_portal_box();
             }
         }
 
@@ -137,6 +139,7 @@ class GamePlay{
         }
 
         void get_portal_box(){
+            portal_cnt=0;
             int pos_x = generator()%HEIGHT, pos_y = generator()%WIDTH, pos_ox = generator()%HEIGHT, pos_oy = generator()%WIDTH;
             if(gmap.is_wall(pos_x, pos_y) && gmap.is_wall(pos_ox, pos_oy) && !((pos_x==pos_ox)&&(pos_y==pos_oy))){
                 gmap.portal_insert(pos_x, pos_y, pos_ox, pos_oy);
