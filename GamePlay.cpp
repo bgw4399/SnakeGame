@@ -12,7 +12,7 @@ class GamePlay{
     ScoreBoard score;
     int timer, temp, level, portal_cnt;
     public:
-        GamePlay(int level):s(10), score(30, 7, WIDTH+3, 5), generator(rd()), level(level){
+        GamePlay(int level):s(8), score(30, 7, WIDTH+3, 5), generator(rd()), level(level){
             generate_random_map();
             timer = 0;     
             portal_cnt = 0; // s가 조건 만족 후 60 frame 후에 첫 등장;
