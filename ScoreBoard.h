@@ -16,6 +16,7 @@ class ScoreBoard{
             wprintw(local_win, "+: %d (%s)\n", s.pos_item_cnt, (s.pos_item_cnt>=5)?"v":" ");
             wprintw(local_win, "-: %d (%s)\n", s.neg_item_cnt, (s.neg_item_cnt>=5)?"v":" ");
             wprintw(local_win, "G: %d (%s)\n", s.portal_enc_cnt, (s.portal_enc_cnt>=1)?"v":" ");
+            wprintw(local_win, "Speed: %.2f\n", s.tick*10);
             wrefresh(local_win);	
         }
 

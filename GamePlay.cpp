@@ -36,13 +36,23 @@ class GamePlay{
             }
         }
 
+        void start_message(int level){
+            WINDOW* result = newwin(HEIGHT, WIDTH*2, 0, 0);
+            wmove(result, HEIGHT/2-3, WIDTH-6);
+            wprintw(result, "level %d start\n", level);
+            wrefresh(result);
+            sleep(1.5);
+            delwin(result);
+        }
+
         bool play(){
             int temp;
+            start_message(level);
             ScoreBoard::start();
             while(1){
                 gmap.show_map();
                 score.show(s);
-                sleep(s.tick);
+                usleep(s.tick*10000);
                 move();
                 get_random_item();
 
@@ -92,20 +102,32 @@ class GamePlay{
         }
 
         void get_random_item(){
-            if (timer%10==0){
+            if (timer%50==0){
                 get_random_item_box();
             }
 
             if(s.length>=10){
-                if(timer%30==0) get_portal_box();
+                if(timer%100==0) get_portal_box();
             }
         }
 
         void get_random_item_box(){
             int pos_x = generator()%HEIGHT, pos_y = generator()%WIDTH;
             if(gmap.is_empty(pos_x, pos_y)){ // Box인지
-                if(generator()%2) gmap.item_insert<Item1>(pos_x, pos_y);
-                else gmap.item_insert<Item2>(pos_x, pos_y);
+                switch(generator()%4){
+                    case 0:
+                        gmap.item_insert<Item1>(pos_x, pos_y);
+                        break;
+                    case 1:
+                        gmap.item_insert<Item2>(pos_x, pos_y);
+                        break;
+                    case 2:
+                        gmap.item_insert<Item3>(pos_x, pos_y);
+                        break;
+                    case 3:
+                        gmap.item_insert<Item4>(pos_x, pos_y);
+                        break;
+                }
             }
             else{
                 get_random_item_box();

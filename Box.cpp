@@ -90,6 +90,56 @@ class Item2:public Box{
         }
 };
 
+class Item3:public Box{
+    public:
+        Item3(Box* box):Box(box){
+            ;
+        };
+        void encounter(Snake& s){
+            s.tick *= 5;
+            s.pos_item_cnt++;
+        }
+
+        void show(){
+            box(local_win,0,0);
+            wbkgd(local_win, COLOR_PAIR(7));
+            wrefresh(local_win);
+        }
+
+        bool is_empty(){
+            return false;
+        }
+
+        bool is_convertable(){
+            return true;
+        }
+};
+
+class Item4:public Box{
+    public:
+        Item4(Box* box):Box(box){
+            ;
+        };
+        void encounter(Snake& s){
+            s.tick /= 5;
+            s.neg_item_cnt++;
+        }
+
+        void show(){
+            box(local_win,0,0);
+            wbkgd(local_win, COLOR_PAIR(8));
+            wrefresh(local_win);
+        }
+
+        bool is_empty(){
+            return false;
+        }
+
+        bool is_convertable(){
+            return true;
+        }
+};
+
 class SnakeBody:public Box{
     public:
         SnakeBody(Box* box):Box(box){

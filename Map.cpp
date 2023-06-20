@@ -21,6 +21,8 @@ class GameMap{
             init_pair(4, COLOR_RED, COLOR_RED);
             init_pair(5, COLOR_BLUE, COLOR_BLUE);
             init_pair(6, COLOR_MAGENTA, COLOR_MAGENTA);
+            init_pair(7, COLOR_RED, COLOR_BLUE);
+            init_pair(8, COLOR_BLUE, COLOR_RED);
             for (int i = 0; i < HEIGHT; i++) {
                 for (int j = 0; j < WIDTH; j++) {
                     gmap[i][j] = new Box(j, i);
